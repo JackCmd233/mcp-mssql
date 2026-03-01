@@ -33,12 +33,13 @@ export async function writeQuery(query: string, confirm: boolean = false) {
             throw new Error("SELECT 操作请使用 read_query");
         }
 
-        // 支持 INSERT、UPDATE、DELETE 和 TRUNCATE 操作
-        const supportedOperations = ["insert", "update", "delete", "truncate"];
+        // 支持 INSERT、UPDATE、DELETE 操作
+        // 注意：TRUNCATE 操作已被禁用，因为它不可回滚且不触发触发器
+        const supportedOperations = ["insert", "update", "delete"];
         const operation = supportedOperations.find(op => lowerQuery.startsWith(op));
 
         if (!operation) {
-            throw new Error("write_query 只允许执行 INSERT、UPDATE、DELETE 或 TRUNCATE 操作");
+            throw new Error("write_query 只允许执行 INSERT、UPDATE 或 DELETE 操作");
         }
 
         // 确认检查：防止误操作

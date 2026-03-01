@@ -285,7 +285,7 @@ MCP 数据库服务器提供以下可供 Claude 使用的工具:
 | 工具 | 描述 | 必需参数 |
 |------|-------------|---------------------|
 | `read_query` | 执行 SELECT 查询以读取数据 | `query`: SQL SELECT 语句 |
-| `write_query` | 执行 INSERT、UPDATE、DELETE 或 TRUNCATE 查询 | `query`: SQL 修改语句<br>`confirm`: 安全标志(必须为 true) |
+| `write_query` | 执行 INSERT、UPDATE 或 DELETE 查询 | `query`: SQL 修改语句<br>`confirm`: 安全标志(必须为 true) |
 | `create_table` | 在数据库中创建新表 | `query`: CREATE TABLE 语句<br>`confirm`: 安全标志(必须为 true) |
 | `alter_table` | 修改现有表架构 | `query`: ALTER TABLE 语句<br>`confirm`: 安全标志(必须为 true) |
 | `drop_table` | 从数据库中删除表 | `table_name`: 表名<br>`confirm`: 安全标志(必须为 true) |

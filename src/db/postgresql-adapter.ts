@@ -94,6 +94,12 @@ export class PostgresqlAdapter implements DbAdapter {
             throw new Error("数据库未初始化");
         }
 
+        // 检查是否为 TRUNCATE 操作（已被禁用）
+        const upperQuery = query.trim().toUpperCase();
+        if (upperQuery.startsWith('TRUNCATE')) {
+            throw new Error('TRUNCATE 操作已被禁用，因为它不可回滚且不触发触发器');
+        }
+
         try {
             // 将 ? 替换为编号参数
             let paramIndex = 0;

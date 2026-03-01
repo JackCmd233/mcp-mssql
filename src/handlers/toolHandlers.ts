@@ -50,7 +50,7 @@ export function handleListTools() {
             {
                 name: "write_query",
                 title: "Write Query",
-                description: "Execute INSERT, UPDATE, DELETE, or TRUNCATE queries to modify database data. " +
+                description: "Execute INSERT, UPDATE, or DELETE queries to modify database data. " +
                     "Returns the number of affected rows. " +
                     "Cannot be used for SELECT queries - use read_query instead. " +
                     "Supports all database types: SQLite, SQL Server, PostgreSQL, MySQL. " +
@@ -60,7 +60,7 @@ export function handleListTools() {
                     properties: {
                         query: {
                             type: "string",
-                            description: "The SQL INSERT/UPDATE/DELETE/TRUNCATE query to execute"
+                            description: "The SQL INSERT/UPDATE/DELETE query to execute"
                         },
                         confirm: {
                             type: "boolean",
