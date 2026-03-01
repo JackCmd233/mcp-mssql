@@ -1,4 +1,5 @@
 import {DbAdapter} from "./adapter.js";
+import {validateForbiddenOperations} from "./sql-validator.js";
 import mysql from "mysql2/promise";
 import {Signer} from "@aws-sdk/rds-signer";
 
@@ -140,12 +141,6 @@ export class MysqlAdapter implements DbAdapter {
             throw new Error("数据库未初始化");
         }
 
-        // 检查是否为 TRUNCATE 操作（已被禁用）
-        const upperQuery = query.trim().toUpperCase();
-        if (upperQuery.startsWith('TRUNCATE')) {
-            throw new Error('TRUNCATE 操作已被禁用，因为它不可回滚且不触发触发器');
-        }
-
         try {
             const [rows] = await this.connection.execute(query, params);
             return Array.isArray(rows) ? rows : [];
@@ -161,6 +156,10 @@ export class MysqlAdapter implements DbAdapter {
         if (!this.connection) {
             throw new Error("数据库未初始化");
         }
+
+        // 验证禁用的操作
+        validateForbiddenOperations(query);
+
         try {
             const [result]: any = await this.connection.execute(query, params);
             const changes = result.affectedRows || 0;
@@ -178,6 +177,10 @@ export class MysqlAdapter implements DbAdapter {
         if (!this.connection) {
             throw new Error("数据库未初始化");
         }
+
+        // 验证禁用的操作
+        validateForbiddenOperations(query);
+
         try {
             await this.connection.query(query);
         } catch (err) {

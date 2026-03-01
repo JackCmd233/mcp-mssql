@@ -1,5 +1,6 @@
 import sqlite3 from "sqlite3";
 import {DbAdapter} from "./adapter.js";
+import {validateForbiddenOperations} from "./sql-validator.js";
 
 /**
  * SQLite 数据库适配器实现
@@ -64,11 +65,8 @@ export class SqliteAdapter implements DbAdapter {
             throw new Error("数据库未初始化");
         }
 
-        // 检查是否为 TRUNCATE 操作（已被禁用）
-        const upperQuery = query.trim().toUpperCase();
-        if (upperQuery.startsWith('TRUNCATE')) {
-            throw new Error('TRUNCATE 操作已被禁用，因为它不可回滚且不触发触发器');
-        }
+        // 验证禁用的操作
+        validateForbiddenOperations(query);
 
         return new Promise((resolve, reject) => {
             this.db!.run(query, params, function (this: sqlite3.RunResult, err: Error | null) {
@@ -90,6 +88,9 @@ export class SqliteAdapter implements DbAdapter {
         if (!this.db) {
             throw new Error("数据库未初始化");
         }
+
+        // 验证禁用的操作
+        validateForbiddenOperations(query);
 
         return new Promise((resolve, reject) => {
             this.db!.exec(query, (err: Error | null) => {

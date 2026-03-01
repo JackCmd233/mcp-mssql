@@ -1,4 +1,5 @@
 import {DbAdapter} from "./adapter.js";
+import {validateForbiddenOperations} from "./sql-validator.js";
 import sql from 'mssql';
 
 /**
@@ -262,11 +263,8 @@ export class SqlServerAdapter implements DbAdapter {
      * @returns 包含结果信息的 Promise
      */
     async run(query: string, params: any[] = []): Promise<{ changes: number, lastID: number }> {
-        // 检查是否为 TRUNCATE 操作（已被禁用）
-        const upperQuery = query.trim().toUpperCase();
-        if (upperQuery.startsWith('TRUNCATE')) {
-            throw new Error('TRUNCATE 操作已被禁用，因为它不可回滚且不触发触发器');
-        }
+        // 验证禁用的操作
+        validateForbiddenOperations(query);
 
         return this.executeWithRetry(async (pool) => {
             const request = pool.request();
@@ -309,6 +307,9 @@ export class SqlServerAdapter implements DbAdapter {
      * @returns 执行完成后解析的 Promise
      */
     async exec(query: string): Promise<void> {
+        // 验证禁用的操作
+        validateForbiddenOperations(query);
+
         return this.executeWithRetry(async (pool) => {
             const request = pool.request();
             await request.batch(query);
