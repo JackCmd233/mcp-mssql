@@ -171,9 +171,9 @@ export function handleListTools() {
                 name: "drop_table",
                 title: "Drop Table",
                 description: "Permanently delete a table from the database. " +
-                    "This operation cannot be undone - all data and structure will be lost. " +
-                    "Requires confirm=true to execute as a safety measure. " +
-                    "Validates that the table exists before attempting deletion.",
+                    "This operation has been DISABLED for security reasons. " +
+                    "DROP operations should be handled by DBA at the database level. " +
+                    "Contact your database administrator if you need to delete a table.",
                 inputSchema: {
                     type: "object",
                     properties: {

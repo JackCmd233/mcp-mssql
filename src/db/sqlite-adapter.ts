@@ -43,6 +43,9 @@ export class SqliteAdapter implements DbAdapter {
             throw new Error("数据库未初始化");
         }
 
+        // 验证禁用的操作（防止恶意查询）
+        validateForbiddenOperations(query);
+
         return new Promise((resolve, reject) => {
             this.db!.all(query, params, (err: Error | null, rows: any[]) => {
                 if (err) {

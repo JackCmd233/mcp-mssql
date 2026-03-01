@@ -4,15 +4,29 @@
  */
 
 /**
- * 禁用的 SQL 操作类型及其错误消息
+ * 禁用操作的配置定义
  */
-const FORBIDDEN_OPERATIONS: { pattern: RegExp; message: string }[] = [
+interface ForbiddenOperationConfig {
+    type: 'DROP' | 'TRUNCATE';
+    pattern: RegExp;
+    message: string;
+}
+
+/**
+ * 禁用的 SQL 操作类型及其错误消息
+ * 使用更严格的模式，检测注释后的危险语句
+ */
+const FORBIDDEN_OPERATIONS: ForbiddenOperationConfig[] = [
     {
-        pattern: /^\s*DROP\s/i,
+        type: 'DROP',
+        // 匹配 DROP，忽略前导空白和单行注释
+        pattern: /^(\s*|--[^\n]*\n)*DROP\s/i,
         message: 'DROP 操作已被禁用，此类操作应由 DBA 在数据库层面处理'
     },
     {
-        pattern: /^\s*TRUNCATE\s/i,
+        type: 'TRUNCATE',
+        // 匹配 TRUNCATE，忽略前导空白和单行注释
+        pattern: /^(\s*|--[^\n]*\n)*TRUNCATE\s/i,
         message: 'TRUNCATE 操作已被禁用，因为它不可回滚且不触发触发器'
     }
 ];

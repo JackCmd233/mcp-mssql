@@ -164,36 +164,14 @@ export async function alterTable(query: string, confirm: boolean = false) {
  * @param tableName 要删除的表名
  * @param confirm 安全确认标志
  * @returns 操作结果
+ * @deprecated DROP 操作已被禁用，此类操作应由 DBA 在数据库层面处理
  */
 export async function dropTable(tableName: string, confirm: boolean) {
-    try {
-        if (!tableName) {
-            throw new Error("表名不能为空");
-        }
-
-        if (!confirm) {
-            return formatSuccessResponse({
-                success: false,
-                message: "需要安全确认。设置 confirm=true 以继续删除表。"
-            });
-        }
-
-        // 检查表是否存在
-        if (!(await checkObjectExists(tableName, 'table'))) {
-            // 错误消息不直接包含用户输入，防止日志注入
-            throw new Error("指定的表不存在");
-        }
-
-        // 删除表
-        await dbExec(`DROP TABLE "${tableName}"`);
-
-        return formatSuccessResponse({
-            success: true,
-            message: "表删除成功"
-        });
-    } catch (error: any) {
-        throw new Error(`删除表失败: ${error.message}`);
-    }
+    // DROP 操作已被禁用
+    return formatSuccessResponse({
+        success: false,
+        message: "DROP 操作已被禁用，此类操作应由 DBA 在数据库层面处理。如需删除表，请联系数据库管理员。"
+    });
 }
 
 /**

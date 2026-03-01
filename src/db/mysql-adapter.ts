@@ -141,6 +141,9 @@ export class MysqlAdapter implements DbAdapter {
             throw new Error("数据库未初始化");
         }
 
+        // 验证禁用的操作（防止恶意查询）
+        validateForbiddenOperations(query);
+
         try {
             const [rows] = await this.connection.execute(query, params);
             return Array.isArray(rows) ? rows : [];

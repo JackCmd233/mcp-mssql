@@ -239,6 +239,9 @@ export class SqlServerAdapter implements DbAdapter {
      * @returns 包含查询结果的 Promise
      */
     async all(query: string, params: any[] = []): Promise<any[]> {
+        // 验证禁用的操作（防止恶意查询）
+        validateForbiddenOperations(query);
+
         return this.executeWithRetry(async (pool) => {
             const request = pool.request();
 
