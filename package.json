@@ -1,0 +1,41 @@
+{
+    "name": "@cmd233/mcp-database-server",
+    "version": "1.2.0",
+    "description": "MCP server for interacting with SQLite, SQL Server, PostgreSQL and MySQL databases (Fixed nullable field detection)",
+    "license": "MIT",
+    "author": "cmd233",
+    "homepage": "https://github.com/cmd233/mcp-database-server",
+    "bugs": "https://github.com/cmd233/mcp-database-server/issues",
+    "type": "module",
+    "bin": {
+        "ea-database-server": "dist/src/index.js",
+        "mcp-database-server": "dist/src/index.js"
+    },
+    "files": [
+        "dist"
+    ],
+    "scripts": {
+        "build": "tsc && shx chmod +x dist/src/index.js",
+        "prepare": "npm run build",
+        "watch": "tsc --watch",
+        "start": "node dist/src/index.js",
+        "dev": "tsc && node dist/src/index.js",
+        "clean": "rimraf dist"
+    },
+    "dependencies": {
+        "@aws-sdk/rds-signer": "^3.0.0",
+        "@modelcontextprotocol/sdk": "1.9.0",
+        "mssql": "11.0.1",
+        "mysql2": "^3.14.1",
+        "pg": "^8.11.3",
+        "sqlite3": "5.1.7"
+    },
+    "devDependencies": {
+        "@types/mssql": "^9.1.5",
+        "@types/pg": "^8.11.13",
+        "@types/sqlite3": "5.1.0",
+        "rimraf": "^5.0.5",
+        "shx": "0.4.0",
+        "typescript": "5.8.3"
+    }
+}
