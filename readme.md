@@ -1,5 +1,3 @@
-[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/executeautomation-mcp-database-server-badge.png)](https://mseep.ai/app/executeautomation-mcp-database-server)
-
 # MCP 数据库服务器
 
 本 MCP (Model Context Protocol) 服务器为 Claude 提供数据库访问能力,支持 SQLite、SQL Server、PostgreSQL 和 MySQL 数据库。
@@ -8,8 +6,8 @@
 
 1. 克隆仓库:
 ```
-git clone https://github.com/executeautomation/mcp-database-server.git
-cd mcp-database-server
+git clone https://github.com/JackCmd233/mcp-mssql.git
+cd mcp-mssql
 ```
 
 2. 安装依赖:
@@ -34,7 +32,7 @@ npm run build
 使用此 MCP 服务器最简单的方法是全局安装:
 
 ```bash
-npm install -g @executeautomation/database-server
+npm install -g @cmd233/mcp-mssql
 ```
 
 这允许您直接使用服务器,无需在本地构建。
@@ -153,7 +151,7 @@ node dist/src/index.js --mysql --aws-iam-auth --host <rds-endpoint> --database <
       "command": "npx",
       "args": [
         "-y",
-        "@executeautomation/database-server",
+        "@cmd233/mcp-mssql",
         "/path/to/your/database.db"
       ]
     },
@@ -161,7 +159,7 @@ node dist/src/index.js --mysql --aws-iam-auth --host <rds-endpoint> --database <
       "command": "npx",
       "args": [
         "-y",
-        "@executeautomation/database-server",
+        "@cmd233/mcp-mssql",
         "--sqlserver",
         "--server", "your-server-name",
         "--database", "your-database-name",
@@ -173,7 +171,7 @@ node dist/src/index.js --mysql --aws-iam-auth --host <rds-endpoint> --database <
       "command": "npx",
       "args": [
         "-y",
-        "@executeautomation/database-server",
+        "@cmd233/mcp-mssql",
         "--postgresql",
         "--host", "your-host-name",
         "--database", "your-database-name",
@@ -185,7 +183,7 @@ node dist/src/index.js --mysql --aws-iam-auth --host <rds-endpoint> --database <
       "command": "npx",
       "args": [
         "-y",
-        "@executeautomation/database-server",
+        "@cmd233/mcp-mssql",
         "--mysql",
         "--host", "your-host-name",
         "--database", "your-database-name",
@@ -198,7 +196,7 @@ node dist/src/index.js --mysql --aws-iam-auth --host <rds-endpoint> --database <
       "command": "npx",
       "args": [
         "-y",
-        "@executeautomation/database-server",
+        "@cmd233/mcp-mssql",
         "--mysql",
         "--aws-iam-auth",
         "--host", "your-rds-endpoint.region.rds.amazonaws.com",
@@ -221,14 +219,14 @@ node dist/src/index.js --mysql --aws-iam-auth --host <rds-endpoint> --database <
     "sqlite": {
       "command": "node",
       "args": [
-        "/absolute/path/to/mcp-database-server/dist/src/index.js",
+        "/absolute/path/to/mcp-mssql/dist/src/index.js",
         "/path/to/your/database.db"
       ]
     },
     "sqlserver": {
       "command": "node",
       "args": [
-        "/absolute/path/to/mcp-database-server/dist/src/index.js",
+        "/absolute/path/to/mcp-mssql/dist/src/index.js",
         "--sqlserver",
         "--server", "your-server-name",
         "--database", "your-database-name",
@@ -239,7 +237,7 @@ node dist/src/index.js --mysql --aws-iam-auth --host <rds-endpoint> --database <
     "postgresql": {
       "command": "node",
       "args": [
-        "/absolute/path/to/mcp-database-server/dist/src/index.js",
+        "/absolute/path/to/mcp-mssql/dist/src/index.js",
         "--postgresql",
         "--host", "your-host-name",
         "--database", "your-database-name",
@@ -250,7 +248,7 @@ node dist/src/index.js --mysql --aws-iam-auth --host <rds-endpoint> --database <
     "mysql": {
       "command": "node",
       "args": [
-        "/absolute/path/to/mcp-database-server/dist/src/index.js",
+        "/absolute/path/to/mcp-mssql/dist/src/index.js",
         "--mysql",
         "--host", "your-host-name",
         "--database", "your-database-name",
@@ -262,7 +260,7 @@ node dist/src/index.js --mysql --aws-iam-auth --host <rds-endpoint> --database <
     "mysql-aws": {
       "command": "node",
       "args": [
-        "/absolute/path/to/mcp-database-server/dist/src/index.js",
+        "/absolute/path/to/mcp-mssql/dist/src/index.js",
         "--mysql",
         "--aws-iam-auth",
         "--host", "your-rds-endpoint.region.rds.amazonaws.com",

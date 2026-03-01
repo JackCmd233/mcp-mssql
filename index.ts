@@ -13,7 +13,7 @@ import sqlite3 from "sqlite3";
 // Configure the server
 const server = new Server(
   {
-    name: "executeautomation/database-server",
+    name: "@cmd233/mcp-mssql",
     version: "1.1.0",
   },
   {
