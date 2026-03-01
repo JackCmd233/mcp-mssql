@@ -10,6 +10,9 @@
     "bin": {
         "mcp-mssql": "./dist/src/index.js"
     },
+    "publishConfig": {
+        "access": "public"
+    },
     "files": [
         "dist"
     ],
