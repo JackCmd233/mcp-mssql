@@ -10,7 +10,7 @@ import {
 } from "@modelcontextprotocol/sdk/types.js";
 import sqlite3 from "sqlite3";
 
-// Configure the server
+// 配置服务器
 const server = new Server(
   {
     name: "@cmd233/mcp-mssql",
@@ -24,7 +24,7 @@ const server = new Server(
   },
 );
 
-// Parse command line arguments
+// 解析命令行参数
 const args = process.argv.slice(2);
 if (args.length === 0) {
   console.error("Please provide a database file path as a command-line argument");
@@ -33,11 +33,11 @@ if (args.length === 0) {
 
 const databasePath = args[0];
 
-// Create a resource base URL for SQLite
+// 创建 SQLite 资源基础 URL
 const resourceBaseUrl = new URL(`sqlite:///${databasePath}`);
 const SCHEMA_PATH = "schema";
 
-// Initialize SQLite database connection
+// 初始化 SQLite 数据库连接
 let db: sqlite3.Database;
 
 function initDatabase(): Promise<void> {
@@ -52,7 +52,7 @@ function initDatabase(): Promise<void> {
   });
 }
 
-// Helper function to run a query and get all results
+// 辅助函数：执行查询并获取所有结果
 function dbAll(query: string, params: any[] = []): Promise<any[]> {
   return new Promise((resolve, reject) => {
     db.all(query, params, (err: Error | null, rows: any[]) => {
@@ -65,7 +65,7 @@ function dbAll(query: string, params: any[] = []): Promise<any[]> {
   });
 }
 
-// Helper function to run a query that doesn't return results
+// 辅助函数：执行不返回结果的查询
 function dbRun(query: string, params: any[] = []): Promise<{ changes: number, lastID: number }> {
   return new Promise((resolve, reject) => {
     db.run(query, params, function(this: sqlite3.RunResult, err: Error | null) {
@@ -78,7 +78,7 @@ function dbRun(query: string, params: any[] = []): Promise<{ changes: number, la
   });
 }
 
-// Helper function to run multiple statements
+// 辅助函数：执行多条语句
 function dbExec(query: string): Promise<void> {
   return new Promise((resolve, reject) => {
     db.exec(query, (err: Error | null) => {
@@ -91,7 +91,7 @@ function dbExec(query: string): Promise<void> {
   });
 }
 
-// List all available database resources (tables)
+// 列出所有可用的数据库资源（表）
 server.setRequestHandler(ListResourcesRequestSchema, async () => {
   // Query to get all table names
   const result = await dbAll(
@@ -107,7 +107,7 @@ server.setRequestHandler(ListResourcesRequestSchema, async () => {
   };
 });
 
-// Get schema information for a specific table
+// 获取特定表的架构信息
 server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
   const resourceUrl = new URL(request.params.uri);
 
@@ -119,7 +119,7 @@ server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
     throw new Error("Invalid resource URI");
   }
 
-  // Query to get column information for a table
+  // 查询表的列信息
   const result = await dbAll(`PRAGMA table_info("${tableName}")`);
 
   return {
@@ -136,7 +136,7 @@ server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
   };
 });
 
-// List available tools
+// 列出可用的工具
 server.setRequestHandler(ListToolsRequestSchema, async () => {
   return {
     tools: [
@@ -242,25 +242,25 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
   };
 });
 
-// Helper function to convert data to CSV format
+// 辅助函数：将数据转换为 CSV 格式
 function convertToCSV(data: any[]): string {
   if (data.length === 0) return '';
   
-  // Get headers
+  // 获取表头
   const headers = Object.keys(data[0]);
   
-  // Create CSV header row
+  // 创建 CSV 表头行
   let csv = headers.join(',') + '\n';
   
-  // Add data rows
+  // 添加数据行
   data.forEach(row => {
     const values = headers.map(header => {
       const val = row[header];
-      // Handle strings with commas, quotes, etc.
+      // 处理包含逗号、引号等的字符串
       if (typeof val === 'string') {
         return `"${val.replace(/"/g, '""')}"`;
       }
-      // Use empty string for null/undefined
+      // null/undefined 使用空字符串
       return val === null || val === undefined ? '' : val;
     });
     csv += values.join(',') + '\n';
@@ -269,7 +269,7 @@ function convertToCSV(data: any[]): string {
   return csv;
 }
 
-// Handle tool calls
+// 处理工具调用
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
   switch (request.params.name) {
     case "read_query": {
@@ -380,7 +380,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       }
 
       try {
-        // Check if table exists
+        // 检查表是否存在
         const tableExists = await dbAll(
           "SELECT name FROM sqlite_master WHERE type='table' AND name = ?",
           [tableName]
@@ -389,8 +389,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         if (tableExists.length === 0) {
           throw new Error(`Table '${tableName}' does not exist`);
         }
-        
-        // Drop the table
+
+        // 删除表
         await dbExec(`DROP TABLE "${tableName}"`);
         
         return {
@@ -466,7 +466,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       }
 
       try {
-        // Check if table exists
+        // 检查表是否存在
         const tableExists = await dbAll(
           "SELECT name FROM sqlite_master WHERE type='table' AND name = ?",
           [tableName]
@@ -503,7 +503,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       }
 
       try {
-        // Create insights table if it doesn't exist
+        // 如果洞察表不存在则创建
         await dbExec(`
           CREATE TABLE IF NOT EXISTS mcp_insights (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -511,8 +511,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
           )
         `);
-        
-        // Insert the insight
+
+        // 插入洞察
         await dbRun(
           "INSERT INTO mcp_insights (insight) VALUES (?)",
           [insight]

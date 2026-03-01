@@ -1,20 +1,20 @@
 #!/bin/bash
 
-# Clean dist directory
+# 清理 dist 目录
 rm -rf dist
 mkdir -p dist
 
-# Install dependencies if node_modules doesn't exist
+# 如果 node_modules 不存在则安装依赖
 if [ ! -d "node_modules" ]; then
   echo "Installing dependencies..."
   npm install
 fi
 
-# Build TypeScript code
+# 构建 TypeScript 代码
 echo "Building TypeScript..."
 ./node_modules/.bin/tsc
 
-# Make JavaScript files executable
+# 设置 JavaScript 文件为可执行
 echo "Making JavaScript files executable..."
 chmod +x dist/src/index.js
 
