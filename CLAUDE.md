@@ -2,14 +2,22 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-本文件为 Claude Code 提供项目指导。
-
 **项目目的**: MCP 服务器项目，为 Claude Code 提供数据库访问能力。通过 MCP 协议，让 Claude AI 能够直接查询和操作 SQLite、SQL Server、PostgreSQL、MySQL 数据库。
+
+**NPM 包名**: `@cmd233/mcp-mssql`
 
 ## 系统要求
 
 - Node.js 18+
 - TypeScript 5.8+
+
+## 快速使用 (NPM)
+
+无需本地构建，直接使用 npm 包:
+
+```bash
+npx -y @cmd233/mcp-mssql /path/to/db.db
+```
 
 ## 核心架构
 
@@ -63,6 +71,8 @@ src/db/adapter.ts (适配器接口层)
 | `npm run clean` | 清理构建目录 |
 | `npm run start` | 运行已构建的服务器 |
 
+**注意**: 当前项目未配置测试脚本。添加测试时需在 package.json 中配置 `test` 命令。
+
 ## 服务器启动方式
 
 | 数据库 | 命令示例 |
@@ -76,6 +86,14 @@ src/db/adapter.ts (适配器接口层)
 **特殊配置:**
 - SQL Server：未提供用户名/密码时自动启用 Windows 集成认证
 - MySQL AWS IAM：自动启用 SSL，需配置 AWS 凭据
+
+**端口参数:**
+
+| 数据库 | 参数 | 默认值 |
+|--------|------|--------|
+| SQL Server | `--port` | 1433 |
+| PostgreSQL | `--port` | 5432 |
+| MySQL | `--port` | 3306 |
 
 ## DbAdapter 接口
 
@@ -135,7 +153,7 @@ docker build -t mcp-mssql .
 docker run -i --rm -v /path/to/db.db:/data/db.db mcp-mssql /data/db.db
 ```
 
-**注意**: Dockerfile 入口点路径需要修正为 `dist/src/index.js`。
+**注意**: Dockerfile 入口点当前为 `dist/index.js`，需要修正为 `dist/src/index.js`。
 
 ## 调试技巧
 
@@ -150,28 +168,41 @@ node dist/src/index.js /path/to/db.db 2>&1 | tee server.log
 
 ## MCP 工具列表
 
-| 工具 | 功能 |
-|------|------|
-| `read_query` | 执行 SELECT 查询 |
-| `write_query` | 执行 INSERT/UPDATE/DELETE/TRUNCATE |
-| `create_table` | 创建新表 |
-| `alter_table` | 修改表结构 |
-| `drop_table` | 删除表 |
-| `list_tables` | 列出所有表 |
-| `describe_table` | 获取表结构 |
-| `export_query` | 导出查询结果 (CSV/JSON) |
-| `append_insight` | 添加业务洞察 (仅 SQLite) |
-| `list_insights` | 列出业务洞察 (仅 SQLite) |
-| `list_views` | 列出视图 (仅 SQL Server) |
-| `describe_view` | 获取视图结构 (仅 SQL Server) |
-| `get_view_definition` | 获取视图定义 SQL (仅 SQL Server) |
-| `list_procedures` | 列出存储过程 (仅 SQL Server) |
-| `describe_procedure` | 获取存储过程参数 (仅 SQL Server) |
-| `get_procedure_definition` | 获取存储过程定义 (仅 SQL Server) |
+| 工具 | 功能 | 数据库支持 |
+|------|------|------------|
+| `read_query` | 执行 SELECT 查询 | 全部 |
+| `write_query` | 执行 INSERT/UPDATE/DELETE/TRUNCATE | 全部 |
+| `create_table` | 创建新表 | 全部 |
+| `alter_table` | 修改表结构 | 全部 |
+| `drop_table` | 删除表 | 全部 |
+| `list_tables` | 列出所有表 | 全部 |
+| `describe_table` | 获取表结构（也支持视图） | 全部 |
+| `export_query` | 导出查询结果 (CSV/JSON) | 全部 |
+| `append_insight` | 添加业务洞察 | 仅 SQLite |
+| `list_insights` | 列出业务洞察 | 仅 SQLite |
+| `list_views` | 列出视图 | 仅 SQL Server |
+| `describe_view` | 获取视图结构（复用 describe_table） | 仅 SQL Server |
+| `get_view_definition` | 获取视图定义 SQL | 仅 SQL Server |
+| `list_procedures` | 列出存储过程 | 仅 SQL Server |
+| `describe_procedure` | 获取存储过程参数 | 仅 SQL Server |
+| `get_procedure_definition` | 获取存储过程定义 | 仅 SQL Server |
 
 ## 添加新数据库支持
 
 1. 在 `src/db/` 下创建适配器文件实现 `DbAdapter` 接口
-2. 在 `src/db/adapter.ts` 的 `createAdapter()` 中注册新类型
+2. 在 `src/db/adapter.ts` 的 `createDbAdapter()` 中注册新类型
 3. 在 `src/index.ts` 中添加命令行参数解析
 4. 安装对应的数据库驱动包
+
+## 发布流程
+
+```bash
+# 1. 更新版本号
+npm version patch|minor|major
+
+# 2. 构建（prepare 脚本会自动执行）
+npm run build
+
+# 3. 发布到 npm
+npm publish
+```
