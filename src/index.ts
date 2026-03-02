@@ -28,7 +28,7 @@ const logger = {
 const server = new Server(
     {
         name: "@cmd233/mcp-mssql",
-        version: "2.0.0",
+        version: "2.0.1",
     },
     {
         capabilities: {
