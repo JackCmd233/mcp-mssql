@@ -1,6 +1,6 @@
 {
     "name": "@cmd233/mcp-mssql",
-    "version": "1.2.0",
+    "version": "2.0.0",
     "description": "MCP server for interacting with SQLite, SQL Server, PostgreSQL and MySQL databases (Fixed nullable field detection)",
     "license": "MIT",
     "author": "cmd233",
